@@ -200,15 +200,16 @@ gulp.task("jQuery", function () {
 
 // !Task to compile TypeScript
 gulp.task("typescript", function () {
-  return gulp
-    .src(paths.ts.src)
+  const tsProject = ts.createProject("tsconfig.json"); 
+  return tsProject
+    .src()
     .pipe(
       plumber({
         errorHandler: notify.onError("Error: <%= error.message %>"),
       })
     )
     .pipe(sourcemaps.init()) // *Initialize sourcemap generation
-    .pipe(ts({ sourceMap: true }))
+    .pipe(tsProject()) // Compile TypeScript using tsconfig.json settings
     .pipe(concat("main.js")) // *Concatenate files
     .pipe(uglify()) // *Minify JS
     .pipe(sourcemaps.write(paths.ts.sourcemaps)) // *Write sourcemaps to specified folder
